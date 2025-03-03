@@ -1,0 +1,57 @@
+#!/bin/bash
+
+NOTES_FILE="notes.txt"
+
+touch "$NOTES_FILE"
+
+function add_note() {
+    echo "Введите заметку:"
+    read note
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $note" >> "$NOTES_FILE"
+    echo "Заметка добавлена!"
+}
+
+function show_notes() {
+    if [[ ! -s "$NOTES_FILE" ]]; then
+        echo "Заметок нет."
+    else
+        nl -b a "$NOTES_FILE"
+    fi
+}
+
+function search_notes() {
+    echo "Введите ключевое слово для поиска:"
+    read keyword
+    grep --color=always -n "$keyword" "$NOTES_FILE" || echo "Заметки с таким словом не найдены."
+}
+
+function delete_note() {
+    show_notes
+    echo "Введите номер заметки для удаления:"
+    read num
+    if [[ "$num" =~ ^[0-9]+$ ]]; then
+        sed -i "${num}d" "$NOTES_FILE"
+        echo "Заметка удалена!"
+    else
+        echo "Ошибка: Введите корректный номер."
+    fi
+}
+
+while true; do
+    echo -e "\nВыберите действие:"
+    echo "1 - Добавить заметку"
+    echo "2 - Показать все заметки"
+    echo "3 - Найти заметку по слову"
+    echo "4 - Удалить заметку"
+    echo "5 - Выйти"
+    read -p "Ваш выбор: " choice
+
+    case "$choice" in
+        1) add_note ;;
+        2) show_notes ;;
+        3) search_notes ;;
+        4) delete_note ;;
+        5) echo "Выход..."; exit 0 ;;
+        *) echo "Ошибка: Выберите корректный вариант." ;;
+    esac
+done
