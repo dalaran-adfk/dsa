@@ -1,0 +1,24 @@
+#!/bin/bash
+
+BACKUP_DIR="$HOME/backup"
+LOG_FILE="$BACKUP_DIR/backup.log"
+DATE=$(date '+%Y-%m-%d')
+ARCHIVE_PATH="$BACKUP_DIR/backup_$DATE.tar.gz"
+
+mkdir -p "$BACKUP_DIR"
+
+echo "Введите файлы через пробел:"
+read -r files
+
+tar -czf "$ARCHIVE_PATH" $files && \
+    echo "$(date '+%Y-%m-%d %H:%M:%S'): Архив создан: $ARCHIVE_PATH" | tee -a "$LOG_FILE" || \
+    echo "Ошибка создания архива." >&2
+    # руслан агай,введите следующие команды. вроде бы должно сработать
+# touch backup.sh
+
+# chmod +x backup.sh
+
+# ./backup.sh
+
+# crontab -e
+# 0 2 * * * ~/backup.sh
